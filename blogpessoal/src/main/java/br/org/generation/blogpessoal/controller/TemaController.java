@@ -29,7 +29,7 @@ public class TemaController {
 	@GetMapping
 	public ResponseEntity <List<Tema>> getAll()
 	{
-		return ResponseEntity.ok(temaRepository.findAll());
+		return ResponseEntity.ok(temaRepository.findAll()); 
 	}
 	
 	@GetMapping("/{id}")
@@ -68,7 +68,8 @@ public class TemaController {
 		return temaRepository.findById(id)
 		.map(resposta -> {
 			temaRepository.deleteById(id);
-			return ResponseEntity.ok().build();
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+
 		})
 		.orElse(ResponseEntity.notFound().build());
 	}
