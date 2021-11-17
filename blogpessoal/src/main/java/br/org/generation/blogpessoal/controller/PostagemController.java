@@ -2,6 +2,8 @@ package br.org.generation.blogpessoal.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,12 +50,12 @@ public class PostagemController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<Postagem> postPostagem(@RequestBody Postagem postagem){
+	public ResponseEntity<Postagem> postPostagem(@Valid @RequestBody Postagem postagem){
 		return ResponseEntity.status(HttpStatus.CREATED).body(postagemRepository.save(postagem));
 	}
 	
 	@PutMapping
-	public ResponseEntity<Postagem> putPostagem(@RequestBody Postagem postagem){
+	public ResponseEntity<Postagem> putPostagem(@Valid @RequestBody Postagem postagem){
 		return postagemRepository.findById(postagem.getId())
 				.map(resposta -> ResponseEntity.ok(postagemRepository.save(postagem)))
 				.orElse(ResponseEntity.notFound().build());
@@ -64,9 +66,11 @@ public class PostagemController {
 	public ResponseEntity <?> deletePostagem(@PathVariable long id)
 	{
 		return postagemRepository.findById(id)
-				.map(resposta -> { postagemRepository.deleteById(id);
-				return ResponseEntity.ok().build();})
-				.orElse(ResponseEntity.notFound().build());
+				.map(resposta -> { 
+					postagemRepository.deleteById(id);
+				    return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+				})
+				.orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
 					
 	
 	
